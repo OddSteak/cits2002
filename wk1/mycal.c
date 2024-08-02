@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,47 +6,21 @@
 #include <time.h>
 
 int first_day_of_month(int mon, int year);
-void print_cal(char *line_break, int row, int offset);
-void print_header(int mon, int year, char *line_break, int row);
+void print_cal_line(char *line_break, int row, int offset);
+void print_cal(int month, int yr);
+void print_yearly(int year);
+void print_header(int mon, int year, char *line_break, int row, bool need_yr);
 
 int main(int ac, char **av)
 {
-    int mon, year;
-
     if (ac == 2)
     {
-        year = atoi(av[1]);
-
-        for (mon = 1; mon < 13; mon+=3)
-        {
-            char *line_break = "\t\t";
-
-            int offset = first_day_of_month(mon, year);
-            int offset2 = first_day_of_month(mon+1, year);
-            int offset3 = first_day_of_month(mon+2, year);
-
-            int rows = 6;   // offset > 4 ? 6 : 5;
-
-            for (int i = 1; i<3; i++)
-            {
-                print_header(mon, year, line_break, i);
-                print_header(mon+1, year, line_break, i);
-                print_header(mon+2, year, line_break, i);
-                printf("\n");
-            }
-
-            for (int j = 0; j < rows; j++)
-            {
-                print_cal(line_break, j, offset);
-                print_cal(line_break, j, offset2);
-                print_cal(line_break, j, offset3);
-                printf("\n");
-            }
-
-            printf("\n");
-        }
+        int year = atoi(av[1]);
+        print_yearly(year);
         return 0;
     }
+
+    int mon, year;
 
     if (ac == 3)
     {
@@ -62,31 +37,78 @@ int main(int ac, char **av)
         year = tmc->tm_year + 1900;
     }
 
+    print_cal(mon, year);
+}
+
+void print_yearly(int year)
+{
+    printf("\n");
+    for (int i = 0; i<43; i++)
+        printf(" ");
+    printf("\033[1m%d\033[0m", year);
+    for (int i = 0; i<43; i++)
+        printf(" ");
+    printf("\n\n");
+
+    for (int mon = 1; mon < 13; mon += 3)
+    {
+        char *line_break = "\t";
+
+        int offset = first_day_of_month(mon, year);
+        int offset2 = first_day_of_month(mon + 1, year);
+        int offset3 = first_day_of_month(mon + 2, year);
+
+        int rows = 6;
+
+        for (int i = 1; i < 3; i++)
+        {
+            print_header(mon, year, line_break, i, false);
+            print_header(mon + 1, year, line_break, i, false);
+            print_header(mon + 2, year, line_break, i, false);
+            printf("\n");
+        }
+
+        for (int j = 0; j < rows; j++)
+        {
+            print_cal_line(line_break, j, offset);
+            print_cal_line(line_break, j, offset2);
+            print_cal_line(line_break, j, offset3);
+            printf("\n");
+        }
+
+        printf("\n");
+    }
+}
+
+// TODO: color today's date
+void print_cal(int mon, int year)
+{
     char *line_break = "\n";
 
     int offset = first_day_of_month(mon, year);
     int rows = offset > 4 ? 6 : 5;
 
-    for (int i = 1; i<3; i++)
-        print_header(mon, year, line_break, i);
+    for (int i = 1; i < 3; i++)
+        print_header(mon, year, line_break, i, true);
 
     for (int i = 0; i < rows; i++)
     {
-        print_cal(line_break, i, offset);
+        print_cal_line(line_break, i, offset);
     }
 }
 
-void print_cal(char *line_break, int row, int offset)
+// TODO: left-handed support
+void print_cal_line(char *line_break, int row, int offset)
 {
+    // TODO: calculate the correct buf size
     char buf[1000];
     strcpy(buf, "");
 
+    // TODO: make this loop suck less
     for (int i = row * 8 + 1; i < row * 8 + 9; i++)
     {
         if (i <= offset)
-        {
             strcat(buf, "    ");
-        }
 
         else if (i % 8 == 0)
         {
@@ -110,7 +132,11 @@ void print_cal(char *line_break, int row, int offset)
             else
             {
                 char num_str[14];
-                snprintf(num_str, 14, "%2d  ", num);
+
+                if (i == (row * 8) + 7)
+                    snprintf(num_str, 14, "%2d", num);
+                else
+                    snprintf(num_str, 14, "%2d  ", num);
                 strcat(buf, num_str);
             }
         }
@@ -133,7 +159,7 @@ int first_day_of_month(int mon, int year)
     return tmc.tm_wday;
 }
 
-void print_header(int month, int year, char *line_break, int row)
+void print_header(int month, int year, char *line_break, int row, bool need_yr)
 {
     struct tm tmv;
 
@@ -144,10 +170,14 @@ void print_header(int month, int year, char *line_break, int row)
 
     if (row == 1)
     {
-        char buf[27];
-        strftime(buf, 27, "        %Y %b          ", &tmv);
+        char buf[28];
+        if (need_yr)
+            strftime(buf, 27, "         %Y %b         ", &tmv);
+        else
+            strftime(buf, 27, "           %b           ", &tmv);
         printf("%s%s", buf, line_break);
     }
     else
         printf("Su  Mo  Tu  We  Th  Fr  Sa%s", line_break);
 }
+
