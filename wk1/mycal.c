@@ -62,8 +62,8 @@ void print_yearly(int year)
         int offset3 = first_day_of_month(mon + 2, year);
 
         int rows1 = calculate_rows(offset, no_of_days(mon, year));
-        int rows2 = calculate_rows(offset2, no_of_days(mon + 1, year));
-        int rows3 = calculate_rows(offset3, no_of_days(mon + 2, year));
+        int rows2 = calculate_rows(offset2, no_of_days(mon+1, year));
+        int rows3 = calculate_rows(offset3, no_of_days(mon+2, year));
 
         // print 6 rows only if one of them needs it
         int rows = rows1 > 5 || rows2 > 5 || rows3 > 5 ? 6 : 5;
@@ -80,8 +80,7 @@ void print_yearly(int year)
         {
             print_cal_line(line_break, j, offset, no_of_days(mon, year));
             print_cal_line(line_break, j, offset2, no_of_days(mon + 1, year));
-            print_cal_line(line_break_last, j, offset3,
-                           no_of_days(mon + 2, year));
+            print_cal_line(line_break_last, j, offset3, no_of_days(mon + 2, year));
         }
         printf("\n");
     }
