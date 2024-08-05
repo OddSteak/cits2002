@@ -6,6 +6,9 @@ int *aman(int m, int n, int depth);
 
 int main(int ac, char **av)
 {
+    // count: 2432
+    // depth: 63
+    // value: 61
     if (ac != 3)
         printf("idiot\n");
 
