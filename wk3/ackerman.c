@@ -5,6 +5,7 @@ int* aman(int m, int n, int depth, int count);
 
 int main(int ac, char** av)
 {
+    // intput: 3 3
     // count: 2432
     // depth: 63
     // value: 61
@@ -14,9 +15,9 @@ int main(int ac, char** av)
     }
 
     int* res = aman(atoi(av[1]), atoi(av[2]), 1, 1);
-    printf("value is %d\n", res[0]);
+    printf("\nvalue is %d\n", res[0]);
     printf("depth is %d\n", res[1]);
-    printf("count is %d\n", res[2]);
+    printf("count is %d\n\n", res[2]);
 }
 
 int* aman(int m, int n, int depth, int count)
@@ -35,7 +36,7 @@ int* aman(int m, int n, int depth, int count)
         res2 = aman(m - 1, res1[0], depth + 1, count+1);
         res[0] = res2[0];
         res[1] = res1[1] > res2[1] ? res1[1] : res2[1];
-        res[2] = res1[2] + res2[2];
+        res[2] = res1[2] + res2[2] - count;
     } else {
         fprintf(stderr, "function is not defined for negative values\n");
         exit(EXIT_FAILURE);
