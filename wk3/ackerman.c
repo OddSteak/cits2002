@@ -15,9 +15,9 @@ int main(int ac, char** av)
     }
 
     int* res = aman(atoi(av[1]), atoi(av[2]), 1, 1);
-    printf("\nvalue is %d\n", res[0]);
+    printf("value is %d\n", res[0]);
     printf("depth is %d\n", res[1]);
-    printf("count is %d\n\n", res[2]);
+    printf("count is %d\n", res[2]);
 }
 
 int* aman(int m, int n, int depth, int count)

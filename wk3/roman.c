@@ -1,9 +1,11 @@
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-char romans[] = { 'M', 'D', 'C', 'L', 'X', 'V', 'I' };
-int reps[] = { 1000, 500, 100, 50, 10, 5, 1 };
+// clang-format off
+char romans[] = { 'M',  'D',  'C',  'L',  'X',  'V',  'I' };
+// clang-format off
+int reps[] =    { 1000, 500,  100,   50,   10,    5,    1 };
 
 void romanize(int num, char* res);
 
