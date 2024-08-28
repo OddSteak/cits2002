@@ -1,0 +1,25 @@
+
+Create a huge file to be copied (one-line shell command):
+	for i in {1..1000} ; do cat /bin/bash >> /tmp/huge ; done
+
+Workshop's solution source-code is in:
+	readfile.c
+
+Compile it with:
+	cc -std=c11 -Wall -Werror readfile readfile.c
+
+Execute the solution once:
+	./readfile /tmp/huge 1000
+
+Make the doit.sh shellscript executable, then
+execute the solution for varying buffersizes (a shellscript):
+	chmod +x doit.sh
+	./doit.sh
+
+Make the makeplot.sh shellscript executable, then
+generate an HTML plot of many executions:
+	chmod +x makeplot.sh
+	./makeplot.sh
+	.... then open plot.html in your browser
+
+
